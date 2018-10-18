@@ -3,6 +3,8 @@ import torch.nn as nn
 from torch.optim import Adam
 
 from model import BERTLM, BERT
+#from model.pytorch_show_graph import make_dot
+from torchviz import make_dot, make_dot_from_trace
 
 import tqdm
 import os
@@ -15,7 +17,7 @@ class BERTTrainer:
 
         self.bert = bert
         self.model = BERTLM(bert, vocab_size).to(self.device)
-
+       
         if torch.cuda.device_count() > 1:
             print("Using %d GPUS for BERT" % torch.cuda.device_count())
             self.model = nn.DataParallel(self.model)
@@ -44,9 +46,14 @@ class BERTTrainer:
         total_correct = 0
         total_element = 0
 
+        out_idx = 0
         for i, data in data_iter:
             data = {key: value.to(self.device) for key, value in data.items()}
-
+            if out_idx == 0:
+                g = make_dot(self.model(data["bert_input"], data["segment_label"]), params=dict(self.model.named_parameters()))
+                g.view()
+                out_idx += 1
+ 
             next_sent_output, mask_lm_output = self.model.forward(data["bert_input"], data["segment_label"])
             next_loss = self.criterion(next_sent_output, data["is_next"])
             mask_loss = self.criterion(mask_lm_output.transpose(1, 2), data["bert_label"])
