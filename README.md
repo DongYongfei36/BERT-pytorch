@@ -1,9 +1,12 @@
 # BERT-pytorch
 
-[![LICENSE](https://img.shields.io/github/license/codertimo/BERT-pytorch.svg)](https://github.com/kor2vec/kor2vec/blob/master/LICENSE)
+[![LICENSE](https://img.shields.io/github/license/codertimo/BERT-pytorch.svg)](https://github.com/codertimo/BERT-pytorch/blob/master/LICENSE)
 ![GitHub issues](https://img.shields.io/github/issues/codertimo/BERT-pytorch.svg)
-[![GitHub stars](https://img.shields.io/github/stars/codertimo/BERT-pytorch.svg)](https://github.com/kor2vec/kor2vec/stargazers)
-
+[![GitHub stars](https://img.shields.io/github/stars/codertimo/BERT-pytorch.svg)](https://github.com/codertimo/BERT-pytorch/stargazers)
+[![CircleCI](https://circleci.com/gh/codertimo/BERT-pytorch.svg?style=shield)](https://circleci.com/gh/codertimo/BERT-pytorch)
+[![PyPI](https://img.shields.io/pypi/v/bert-pytorch.svg)](https://pypi.org/project/bert_pytorch/)
+[![PyPI - Status](https://img.shields.io/pypi/status/bert-pytorch.svg)](https://pypi.org/project/bert_pytorch/)
+[![Documentation Status](https://readthedocs.org/projects/bert-pytorch/badge/?version=latest)](https://bert-pytorch.readthedocs.io/en/latest/?badge=latest)
 
 Pytorch implementation of Google AI's 2018 BERT, with simple annotation
 
@@ -27,6 +30,38 @@ This repo is implementation of BERT. Code is very simple and easy to understand 
 Some of these codes are based on [The Annotated Transformer](http://nlp.seas.harvard.edu/2018/04/03/attention.html)
 
 Currently this project is working on progress. And the code is not verified yet.
+
+## Installation
+```
+pip install bert-pytorch
+```
+
+## Quickstart
+
+**NOTICE : Your corpus should be prepared with two sentences in one line with tab(\t) separator**
+
+### 0. Prepare your corpus
+```
+Welcome to the \t the jungle\n
+I can stay \t here all night\n
+```
+
+or tokenized corpus (tokenization is not in package)
+```
+Wel_ _come _to _the \t _the _jungle\n
+_I _can _stay \t _here _all _night\n
+```
+
+
+### 1. Building vocab based on your corpus
+```shell
+bert-vocab -c data/corpus.small -o data/vocab.small
+```
+
+### 2. Train your own BERT model
+```shell
+bert -c data/dataset.small -v data/vocab.small -o output/bert.model
+```
 
 ## Language Model Pre-training
 
@@ -71,71 +106,6 @@ not directly captured by language modeling
 
 1. Randomly 50% of next sentence, gonna be continuous sentence.
 2. Randomly 50% of next sentence, gonna be unrelated sentence.
-
-
-## Usage
-**NOTICE : Your corpus should be prepared with two sentences in one line with tab(\t) seperator**
-```
-Welcome to the \t the jungle \n
-I can stay \t here all night \n
-```
-
-### 1. Building vocab based on your corpus
-```shell
-python build_vocab.py -c data/corpus.small -o data/corpus.small.vocab
-```
-```shell
-usage: build_vocab.py [-h] -c CORPUS_PATH -o OUTPUT_PATH [-s VOCAB_SIZE]
-                      [-e ENCODING] [-m MIN_FREQ]
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -c CORPUS_PATH, --corpus_path CORPUS_PATH
-  -o OUTPUT_PATH, --output_path OUTPUT_PATH
-  -s VOCAB_SIZE, --vocab_size VOCAB_SIZE
-  -e ENCODING, --encoding ENCODING
-  -m MIN_FREQ, --min_freq MIN_FREQ
-
-```
-### 2. Building BERT train dataset with your corpus
-```shell
-python build_dataset.py -d data/corpus.small -v data/corpus.small.vocab -o data/dataset.small
-```
-
-```shell
-usage: build_dataset.py [-h] -v VOCAB_PATH -c CORPUS_PATH [-e ENCODING] -o
-                        OUTPUT_PATH
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -v VOCAB_PATH, --vocab_path VOCAB_PATH
-  -c CORPUS_PATH, --corpus_path CORPUS_PATH
-  -e ENCODING, --encoding ENCODING
-  -o OUTPUT_PATH, --output_path OUTPUT_PATH
-```
-
-### 3. Train your own BERT model
-```shell
-python train.py -d data/dataset.small -v data/corpus.small.vocab -o output/
-```
-```shell
-usage: train.py [-h] -d TRAIN_DATASET [-t TEST_DATASET] -v VOCAB_PATH -o
-                OUTPUT_DIR [-hs HIDDEN] [-n LAYERS] [-a ATTN_HEADS]
-                [-s SEQ_LEN] [-b BATCH_SIZE] [-e EPOCHS]
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -d TRAIN_DATASET, --train_dataset TRAIN_DATASET
-  -t TEST_DATASET, --test_dataset TEST_DATASET
-  -v VOCAB_PATH, --vocab_path VOCAB_PATH
-  -o OUTPUT_DIR, --output_dir OUTPUT_DIR
-  -hs HIDDEN, --hidden HIDDEN
-  -n LAYERS, --layers LAYERS
-  -a ATTN_HEADS, --attn_heads ATTN_HEADS
-  -s SEQ_LEN, --seq_len SEQ_LEN
-  -b BATCH_SIZE, --batch_size BATCH_SIZE
-  -e EPOCHS, --epochs EPOCHS
-```
 
 
 ## Author
